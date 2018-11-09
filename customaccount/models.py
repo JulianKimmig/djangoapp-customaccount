@@ -15,8 +15,10 @@ class CustomUser(models.Model):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        CustomUser.objects.create(user=instance)
+        CustomUser.objects.get()
+        CustomUser.objects.create(user=instance,public_name=(instance.first_name + " " + instance.last_name if len(instance.first_name) > 0 and len(instance.last_name) > 0 else instance.username))
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    instance.custom_user.save()
+    CustomUser.objects.get(user=instance).save()
+#    instance.custom_user.save()
